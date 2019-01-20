@@ -1,2 +1,1 @@
-# SnakePy
-simple snake game created with open-cv library
+Simple snake game coded in python using Open-CV

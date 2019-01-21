@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
 import time
-#from msvcrt import getch
+import curses
+import random
 
 blockSize=30
+frameSize=690
 
 class point():
     def __init__(self,x,y):
@@ -17,6 +19,26 @@ class point():
         return (self.x == other.x and self.y == other.y)
 
 
+class food():
+    def __init__(self):
+        self.pos = point(random.randint(0,23),random.randint(0,23))
+
+    def generateFood(self,canvas):
+        self.pos.x = random.randint(0,22)*30
+        self.pos.y = random.randint(0,22)*30
+        canvas = cv2.rectangle(canvas, (self.pos.x , self.pos.y) , (self.pos.x + blockSize ,self.pos.y + blockSize), (255,0,0), -1)
+        return canvas
+
+    def posFood(self,canvas):
+        canvas = cv2.rectangle(canvas, (self.pos.x , self.pos.y) , (self.pos.x + blockSize ,self.pos.y + blockSize), (255,0,0), -1)
+
+    def eatFood(self,snake,canvas):
+        if snake.bodyArray[0] == self.pos:
+            canvas = cv2.rectangle(canvas, (self.pos.x , self.pos.y) , (self.pos.x + blockSize ,self.pos.y + blockSize), (20,20,20), -1)
+            self.generateFood(canvas)
+            return True
+        return False
+
 class snake():
     def __init__(self):
         self.bodyArray=[point(0,0)]
@@ -27,44 +49,40 @@ class snake():
             'down' : point(0,1)
         }
         self.curDir='right'
+        self.F = food()
+
     
     def update(self):
         for i in range(len(self.bodyArray)):
             self.bodyArray[i] = self.bodyArray[i] + self.dirs[self.curDir]
             print(self.bodyArray[i].x,self.bodyArray[i].y)
             
-        time.sleep(0.25)
+        time.sleep(0.20)
         
     def getDir(self,keyPress):
         print(keyPress)
-        """
-        if(keyPress == 72):
-            self.curDir = 'up'
-            print('direction changed to up')
-        elif(keyPress == 80):
-            self.curDir = 'down'
-            print('direction changed to down')
-        elif(keyPress == 75):
-            self.curDir = 'left'
-            print('direction changed to left')
-        elif(keyPress == 77):
-            self.curDir = 'right'
-            print('direction changed to right')
-        else:
-            pass
-        """
 
     def display(self):
+        frame = 1
         while True:
-            canvas=20*np.ones((690,690),np.uint8)
-            cv2.cvtColor(canvas,cv2.COLOR_GRAY2BGR)
+            canvas=20*np.ones((frameSize,frameSize),np.uint8)
+            canvas = cv2.cvtColor(canvas,cv2.COLOR_GRAY2BGR)
+            
+            if frame == 1:
+                self.F.generateFood(canvas)
+                frame+=1
+            
+            self.F.posFood(canvas)
+
             for blk in self.bodyArray:
-                cv2.rectangle(canvas, (blk.x , blk.y) , (blk.x + blockSize ,blk.y + blockSize), (255,0,0), -1)
+                cv2.rectangle(canvas, (blk.x , blk.y) , (blk.x + blockSize ,blk.y + blockSize), (255,255,255), -1)
             cv2.imshow("game",canvas)
             self.update()
+            
             keyPress = cv2.waitKeyEx(1)
             if keyPress == 27:
                 break
+            """
             elif keyPress == 65364:
                 self.curDir = 'down'
             elif keyPress == 65361:
@@ -74,7 +92,7 @@ class snake():
             elif keyPress == 65362 :
                 self.curDir = 'up'
             print(keyPress)
-            
+            """
 
 
 def main():

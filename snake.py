@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 import time
-import curses
+import pygame
 import random
 
 blockSize=30
 frameSize=690
+
+pygame.init()
 
 class point():
     def __init__(self,x,y):
@@ -79,20 +81,23 @@ class snake():
             cv2.imshow("game",canvas)
             self.update()
             
-            keyPress = cv2.waitKeyEx(1)
+
+
+            #capturing key presses
+            keyPress = cv2.waitKeyEx(4)
             if keyPress == 27:
                 break
-            """
-            elif keyPress == 65364:
+            
+            elif keyPress == 65364 and self.curDir != 'up':
                 self.curDir = 'down'
-            elif keyPress == 65361:
+            elif keyPress == 65361 and self.curDir != 'right':
                 self.curDir = 'left'
-            elif keyPress == 65363 :
+            elif keyPress == 65363 and self.curDir != 'left':
                 self.curDir = 'right'
-            elif keyPress == 65362 :
+            elif keyPress == 65362 and self.curDir != 'down':
                 self.curDir = 'up'
             print(keyPress)
-            """
+            
 
 
 def main():

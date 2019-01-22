@@ -113,25 +113,28 @@ class snake():
 
 
             #capturing key presses
+            tKey = time.time()
             keyPress = cv2.waitKeyEx(250)
+            tKeyUp = time.time() - tKey
+            waitTime = 250/1000 -tKeyUp
             if keyPress == 27:
                 break
             
             elif keyPress == 65364 and (self.curDir != 'up' or self.curDir != 'down'):
                 self.curDir = 'down'
-                time.sleep(0.25)
+                time.sleep(waitTime)
 
             elif keyPress == 65361 and (self.curDir != 'right' or self.curDir != 'left'):
                 self.curDir = 'left'
-                time.sleep(0.25)
+                time.sleep(waitTime)
 
             elif keyPress == 65363 and (self.curDir != 'left' or self.curDir != 'right'):
                 self.curDir = 'right'
-                time.sleep(0.25)
+                time.sleep(waitTime)
             
             elif keyPress == 65362 and (self.curDir != 'down' or self.curDir != 'up'):
                 self.curDir = 'up'
-                time.sleep(0.25)
+                time.sleep(waitTime)
             
 
 

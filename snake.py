@@ -115,8 +115,8 @@ class snake():
             #capturing key presses
             tKey = time.time()
             keyPress = cv2.waitKeyEx(250)
-            tKeyUp = time.time() - tKey
-            waitTime = 250/1000 -tKeyUp
+            tKeyDown = time.time() - tKey
+            waitTime = 250/1000 -tKeyDown
             if keyPress == 27:
                 break
             
@@ -135,6 +135,28 @@ class snake():
             elif keyPress == 65362 and (self.curDir != 'down' or self.curDir != 'up'):
                 self.curDir = 'up'
                 time.sleep(waitTime)
+            
+        for i in range(240):
+            score = len(self.bodyArray) - 1
+            canvas=20*np.ones((frameSize,frameSize),np.uint8)
+            canvas = cv2.cvtColor(canvas,cv2.COLOR_GRAY2BGR)
+
+            cv2.putText(canvas,"Score : " + str(score),(5,20), cv2.FONT_HERSHEY_SIMPLEX,0.55,(0,255,0))
+            
+            cv2.putText(canvas,"Game Over",(70,frameSize//2), cv2.FONT_HERSHEY_COMPLEX,3,(0,255,0))
+
+            if i%2 == 1:
+                for blk in self.bodyArray:
+                    cv2.rectangle(canvas, (blk.x , blk.y) , (blk.x + blockSize ,blk.y + blockSize), (255,255,255), -1)
+            
+            cv2.imshow("game",canvas)
+            time.sleep(0.5)
+            
+
+            if cv2.waitKey(1) == 27:
+                cv2.destroyAllWindows()
+                break
+
             
 
 

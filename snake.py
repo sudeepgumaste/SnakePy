@@ -1,13 +1,11 @@
 import cv2
 import numpy as np
 import time
-import pygame
 import random
 
 blockSize=30
 frameSize=690
 
-pygame.init()
 
 class point():
     def __init__(self,x,y):
@@ -26,8 +24,8 @@ class food():
         self.pos = point(random.randint(0,23),random.randint(0,23))
 
     def generateFood(self,canvas):
-        self.pos.x = random.randint(0,22)*blockSize
-        self.pos.y = random.randint(0,22)*blockSize
+        self.pos.x = random.randint(1,21)*blockSize
+        self.pos.y = random.randint(1,21)*blockSize
         canvas = cv2.rectangle(canvas, (self.pos.x , self.pos.y) , (self.pos.x + blockSize ,self.pos.y + blockSize), (255,0,0), -1)
         return canvas
 
@@ -57,12 +55,18 @@ class snake():
         self.Die = False
 
     
-    def update(self):
-        for i in range(len(self.bodyArray)):
-            self.bodyArray[i] = self.bodyArray[i] + self.dirs[self.curDir]
-            print(self.bodyArray[i].x,self.bodyArray[i].y)
-        self.die()
-        #time.sleep(0.25)
+    def update(self,eat):
+        last = self.bodyArray[-1]
+        #print(last.x,last.y)
+        size=len(self.bodyArray)-1
+        while(size>0):
+            self.bodyArray[size]=self.bodyArray[size-1]
+            size-=1
+ 
+        self.bodyArray[0] = self.bodyArray[0] + self.dirs[self.curDir]
+        
+        if eat:
+            self.bodyArray.append(last)
 
 
     def die(self):
@@ -90,12 +94,10 @@ class snake():
             for blk in self.bodyArray:
                 cv2.rectangle(canvas, (blk.x , blk.y) , (blk.x + blockSize ,blk.y + blockSize), (255,255,255), -1)
             cv2.imshow("game",canvas)
+            self.die()
 
-            fd = self.F.eatFood(self,canvas)
-            prevPos = self.bodyArray[-1]
-            self.update()
-            if fd:
-                self.bodyArray.append(prevPos)
+            eat = self.F.eatFood(self,canvas)
+            self.update(eat)
             
 
 
@@ -106,13 +108,19 @@ class snake():
             
             elif keyPress == 65364 and (self.curDir != 'up' or self.curDir != 'down'):
                 self.curDir = 'down'
+                time.sleep(0.25)
+
             elif keyPress == 65361 and (self.curDir != 'right' or self.curDir != 'left'):
                 self.curDir = 'left'
+                time.sleep(0.25)
+
             elif keyPress == 65363 and (self.curDir != 'left' or self.curDir != 'right'):
                 self.curDir = 'right'
+                time.sleep(0.25)
+            
             elif keyPress == 65362 and (self.curDir != 'down' or self.curDir != 'up'):
                 self.curDir = 'up'
-            print(keyPress)
+                time.sleep(0.25)
             
 
 

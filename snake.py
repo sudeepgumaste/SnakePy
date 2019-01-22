@@ -57,30 +57,41 @@ class snake():
     
     def update(self,eat):
         last = self.bodyArray[-1]
-        #print(last.x,last.y)
+                
         size=len(self.bodyArray)-1
         while(size>0):
             self.bodyArray[size]=self.bodyArray[size-1]
             size-=1
- 
-        self.bodyArray[0] = self.bodyArray[0] + self.dirs[self.curDir]
         
+        
+        self.bodyArray[0] = self.bodyArray[0] + self.dirs[self.curDir]
+ 
+
         if eat:
+            #if food is eaten increase the length
             self.bodyArray.append(last)
 
 
-    def die(self):
+    def death(self):
         if self.bodyArray[0].x < 0 or self.bodyArray[0].x > 630 or self.bodyArray[0].y < 0 or self.bodyArray[0].y > 630:
-            print('dead')
             self.Die = True
+        for i in range(1,len(self.bodyArray)):
+            if self.bodyArray[i] == self.bodyArray[0]:
+                self.Die=True
+        
+        if self.Die:
+            print('dead')
 
 
     def display(self):
         frame = 1
         while not(self.Die):
+            score = len(self.bodyArray) - 1
             canvas=20*np.ones((frameSize,frameSize),np.uint8)
             canvas = cv2.cvtColor(canvas,cv2.COLOR_GRAY2BGR)
             
+            cv2.putText(canvas,"Score : " + str(score),(5,20), cv2.FONT_HERSHEY_SIMPLEX,0.55,(0,255,0))
+
             if frame == 1:
                 #when the game starts
                 self.F.generateFood(canvas)
@@ -94,7 +105,7 @@ class snake():
             for blk in self.bodyArray:
                 cv2.rectangle(canvas, (blk.x , blk.y) , (blk.x + blockSize ,blk.y + blockSize), (255,255,255), -1)
             cv2.imshow("game",canvas)
-            self.die()
+            self.death()
 
             eat = self.F.eatFood(self,canvas)
             self.update(eat)
@@ -127,10 +138,6 @@ class snake():
 def main():
     S = snake()
     S.display()
-
-#    if cv2.waitKey(0)==27:
-#        cv2.destroyAllWindows()
-
 
 if __name__ == "__main__":
     main()

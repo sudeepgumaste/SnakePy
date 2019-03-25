@@ -2,3 +2,5 @@
 | It needs open-cv library. Install it before running |
 | Command to install open-cv : pip install opencv-python |
 | Might not run correctly on windows |
+|Arrow keys to move the snake|
+|esc to exit|

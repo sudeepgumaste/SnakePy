@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 import random
+import sys
 
 blockSize=30
 frameSize=690
@@ -53,6 +54,16 @@ class snake():
         self.curDir='right'
         self.F = food()
         self.Die = False
+        if sys.platform=='linux':
+            self.left = 65361
+            self.right = 65363
+            self.top = 65362
+            self.down = 65364
+        else :
+            self.left = 2424832
+            self.right = 2555904
+            self.top = 2490368
+            self.down = 2621440
 
     
     def update(self,eat):
@@ -120,19 +131,19 @@ class snake():
             if keyPress == 27:
                 break
             
-            elif keyPress == 65364 and (self.curDir != 'up' or self.curDir != 'down'):
+            elif keyPress == self.down and (self.curDir != 'up' or self.curDir != 'down'):
                 self.curDir = 'down'
                 time.sleep(waitTime)
 
-            elif keyPress == 65361 and (self.curDir != 'right' or self.curDir != 'left'):
+            elif keyPress == self.left and (self.curDir != 'right' or self.curDir != 'left'):
                 self.curDir = 'left'
                 time.sleep(waitTime)
 
-            elif keyPress == 65363 and (self.curDir != 'left' or self.curDir != 'right'):
+            elif keyPress == self.right and (self.curDir != 'left' or self.curDir != 'right'):
                 self.curDir = 'right'
                 time.sleep(waitTime)
             
-            elif keyPress == 65362 and (self.curDir != 'down' or self.curDir != 'up'):
+            elif keyPress == self.top and (self.curDir != 'down' or self.curDir != 'up'):
                 self.curDir = 'up'
                 time.sleep(waitTime)
             
